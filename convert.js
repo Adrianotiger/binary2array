@@ -68,7 +68,7 @@ let Converter = new class
     switch(options["format"].value)
     {
       case "hex": radix = 16; if(pad) padStart = 2 * (bits / 8); break;
-      case "dec": radix = 10; if(pad) {const sp = [3,5,8,10]; padStart = sp[bits / 8];} padChar = ' '; break;
+      case "dec": radix = 10; if(pad) {const sp = [3,5,8,10]; padStart = sp[bits / 8 - 1];} padChar = ' '; break;
       case "bin": radix = 2; padStart = bits; break;
       default: arr = new UInt8Array(buffer); break;
     }
