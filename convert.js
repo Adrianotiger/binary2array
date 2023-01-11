@@ -45,12 +45,25 @@ let Converter = new class
     const pad = options["pad"].checked;
     const prefix = options["prefix"].value.trim();
     const suffix = options["suffix"].value.trim();
+
     switch(options["datatype"].value)
     {
-      case "uint8_t": arr = new Uint8Array(buffer); bits = 8; break;
-      case "uint16_t": arr = new Uint16Array(buffer); bits = 16; break;
-      case "uint32_t": arr = new Uint32Array(buffer); bits = 32; break;
-      default: arr = new Uint8Array(buffer); break;
+      case "uint8_t": bits = 8; break;
+      case "uint16_t": bits = 16; break;
+      case "uint32_t": bits = 32; break;
+    }
+
+    if((buffer.byteLength % (bits / 8) ) != 0)
+    {
+      this.text.textContent = "ERROR: you can set '" + options["datatype"].value + "' only if the buffer size is divisible by " + (bits / 8) + ".";
+      return;
+    }
+
+    switch(bits)
+    {
+      case 8: arr = new Uint8Array(buffer); break;
+      case 16: arr = new Uint16Array(buffer); break;
+      case 32: arr = new Uint32Array(buffer); break;
     }
     switch(options["format"].value)
     {
