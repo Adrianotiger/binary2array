@@ -29,3 +29,6 @@ The quantity of numbers for each row. Set to 0 if you want all data on a single 
 
 ### Skip Bytes
 Bytes to skip. Sometimes you have some headers to remove. If so, set the number of bytes you want to remove from the file, before the array is generated.
+
+### ASCII Comments
+Add a column with the converted number as ASCII (helpful if you converts some text documents).
