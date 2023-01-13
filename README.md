@@ -1,5 +1,4 @@
-# binary2array
-Convert a binary file to a C array
+# Convert a binary file to a C style array
 
 Just another online converter, to convert a binary file to a C header array.
 
