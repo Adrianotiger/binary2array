@@ -5,7 +5,7 @@ The number format in the output.
 - HEX (Example: 0x3c, 0x21, 0x44, 0x4f, 0x43, 0x54, 0x59, ...)
 - DEC (Example:  60,  33,  68,  79,  67,  84,  89, ...)
 - BIN (Example: b00111100, b00100001, b01000100, b01001111, b01000011, b01010100, b01011001, ...)
-- 
+
 ### Prefix
 What text you want add to the number.  
 In C and as HEX, it is `0x` (0x5A), but you can also set '\x' or leave it empty.
