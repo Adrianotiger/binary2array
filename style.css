@@ -13,6 +13,10 @@ body {
   margin:0 auto;
 }
 
+a {
+  color: #000;
+}
+
 .dialog
 {
   width:20vw;
@@ -42,7 +46,7 @@ body {
 .dialog button, .dialog input, .dialog select
 {
   background: linear-gradient(to bottom, #abd, #79a);
-  margin: 10px;
+  margin: 3px 10px;
   border-radius: 4px;
 }
 
@@ -58,6 +62,11 @@ body {
   box-shadow: 0px 0px 2px 2px #ff5;
 }
 
+.dialog h2
+{
+  margin: 10px;
+}
+
 .dialog button
 {
   font-size: 130%;
@@ -69,6 +78,18 @@ body {
 {
   display:inline-block;
   min-width: 80px;
+}
+
+.dialog canvas
+{
+  max-width:64px;
+  max-height:64px;
+  width:auto;
+}
+.dialog canvas:hover
+{
+  max-width: none;
+  max-height: none;
 }
 
 .dialog2
@@ -107,4 +128,31 @@ body {
   position: absolute;
   bottom: 5px;
   right: 5px;
+}
+
+.github
+{
+  display: inline-block;
+  position: absolute;
+  top: 2px;
+  right: 5px;
+  font-size: 80%;
+}
+
+.icon
+{
+  display: inline-block;
+  position: sticky;
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(to bottom, #abd, #79a);
+  border-radius: 8px;
+  line-height: 32px;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.icon:hover
+{
+  box-shadow: 0px 0px 4px 2px #ff5;
 }

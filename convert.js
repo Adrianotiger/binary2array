@@ -4,6 +4,8 @@ let Converter = new class
   {
     this.div = null;
     this.text = null;
+    this.array = null;
+    this.download = null;
   }
 
   showDialog()
@@ -11,18 +13,48 @@ let Converter = new class
     if(this.div != null) return;
     
     this.text = _CN("textarea");
-    this.div = _CN("div", {class:"dialog2"}, [this.text], document.body);
+    let saveButt = _CN("span", {class:"icon", style:"top:5px;right:25px;position:absolute;", title:"Save C file"}, ["💾"]);
+    this.download = _CN("span", {class:"icon", style:"top:5px;right:60px;position:absolute;", title:"Download binary"}, ["⬇"]);
+    this.div = _CN("div", {class:"dialog2"}, [this.text, saveButt, this.download], document.body);
+
+    saveButt.addEventListener("click", ()=>{this.saveFile(false);});
+    this.download.addEventListener("click", ()=>{this.saveFile(true);});
   }
 
   convert(file, options)
   {
     this.text.textContent = "";
+    this.download.style.display = "none";
 
     const reader = new FileReader();
     reader.addEventListener('load', (event) => {
-        this.showContents(file, event.target.result, options);
+        this.showContents(file.name, event.target.result, options);
     });
     reader.readAsArrayBuffer(file);
+  }
+
+  async convertImage(image, options)
+  {
+    this.text.textContent = "";
+    this.download.style.display = "inline-block";
+
+    const convertTo = options["convertto"].value;
+    let buffer = null;
+
+    if(convertTo == "raw" || convertTo == "raw_compact" || convertTo == "raw_zip")
+    {
+      buffer = await ImageConverter.convertRaw(image, options, convertTo);
+    }
+    else if(convertTo == "png")
+    {
+      buffer = ImageConverter.convertPng(image, options);
+    }
+    else if(convertTo == "jpeg")
+    {
+      buffer = ImageConverter.convertJpeg(image, options);
+    }
+
+    this.showContents(convertTo, buffer, options);
   }
 
   clear()
@@ -33,9 +65,71 @@ let Converter = new class
     }
   }
 
-  showContents(file, buffer, options)
+  saveFile(saveAsBinary)
   {
-    let arr = null;
+    if(this.array == null || Options.file == null) return;
+
+    if(window.showSaveFilePicker)
+    {
+      let options = {
+        suggestedName: Options.file.name.substring(0, Options.file.name.indexOf(".")), 
+        excludeAcceptAllOption: true,
+        types:[]
+      };
+      var mime = "octet/stream";
+      if(saveAsBinary)
+      {
+        var accept = {};
+        var description = "Image file";
+        switch(Options.inputs["convertto"].value) 
+        {
+          case "jpeg": mime = "image/jpeg"; accept[mime] = ['.jpg', '.jpeg']; break;
+          case "png": mime = "image/png"; accept[mime] = ['.png']; break;
+          default: accept[mime] = ['.raw']; description = "Binary file"; break;
+        }
+        options.types.push({description:description, accept:accept});
+      }
+      else
+      {
+        options.types.push({description:"C File", accept:{'text/plain':['.cpp', '.h', '.c']}});
+      }
+      window.showSaveFilePicker(options).then((fh)=>{
+        console.log(fh);
+        fh.getFile().then(fp=>{
+          console.log(fp);
+          fh.createWritable().then(async fw=>{
+            var contents = null;
+            if(saveAsBinary)
+              await fw.write(this.array);
+            else
+              await fw.write(this.text.textContent);
+            fw.close();
+          }).catch(ex=>{
+            alert("Unable to open file " + fh.name);
+          });
+        }).catch(ex=>{
+          alert("Unable to open file " + fh.name);
+        });
+      }).catch(ex=>{
+        console.log("File picker abort");
+      });
+    }
+    else
+    {
+      let a = _CN("a", {style:"display:none"}, [" "], document.body);
+      var blob = new Blob([this.array], {type: "image/jpeg"});
+      var url = window.URL.createObjectURL(blob);
+      a.href = url;
+      a.download = "test.jpg";
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    }
+  }
+
+  showContents(filename, buffer, options)
+  {
+    this.array = null;
     let bits = 8;
     let radix = 16;
     let txt = "";
@@ -59,35 +153,42 @@ let Converter = new class
       return;
     }
 
+      // Create array from ArrayBuffer with the right data type
     switch(bits)
     {
-      case 8: arr = new Uint8Array(buffer); break;
-      case 16: arr = new Uint16Array(buffer); break;
-      case 32: arr = new Uint32Array(buffer); break;
+      case 8: this.array = new Uint8Array(buffer); break;
+      case 16: this.array = new Uint16Array(buffer); break;
+      case 32: this.array = new Uint32Array(buffer); break;
     }
+      // Check the right output format and set the padding
     switch(options["format"].value)
     {
       case "hex": radix = 16; if(pad) padStart = 2 * (bits / 8); break;
       case "dec": radix = 10; if(pad) {const sp = [3,5,8,10]; padStart = sp[bits / 8 - 1];} padChar = ' '; break;
       case "bin": radix = 2; padStart = bits; break;
-      default: arr = new UInt8Array(buffer); break;
+      default: this.array = new UInt8Array(buffer); break;
     }
 
+      // Remove some bytes if it is set in the options
     const skipBytes = parseInt(options["skipbytes"].value) / (bits/8);
-    if(skipBytes > 0) arr = arr.slice(skipBytes);
-    const arrLen = arr.length;
+    if(skipBytes > 0) this.array = this.array.slice(skipBytes);
+    const arrLen = this.array.length;
     if(newLine == 0) newLine = arrLen;
     let numIndex = 0;
-    this.text.textContent = "static const " + options["datatype"].value + " " + file.name.replace(" ", "_").substring(0, file.name.indexOf(".")) + "[" + arrLen + "] = {\n";
-    arr.forEach(a=>{
-      txt += prefix + arr[numIndex].toString(radix).padStart(padStart, padChar) + suffix;
+
+      // Begin to write the output
+    this.text.textContent = "static const " + options["datatype"].value + " " + filename.replace(" ", "_").substring(0, filename.indexOf(".")) + "[" + arrLen + "] = {\n";
+    this.array.forEach(a=>{
+      txt += prefix + this.array[numIndex].toString(radix).padStart(padStart, padChar) + suffix;
       if(++numIndex < arrLen) txt += ", ";
       if((numIndex % newLine) == 0) txt += '\n';
 
       if((numIndex % 1000) == 0) {this.text.textContent += txt; txt = "";}
     });
 
-    this.text.textContent += txt + "\n};\n";
+    this.text.textContent += txt.trim() + "\n};\n";
+
+      // Output some info in the console
     console.log(buffer);
     console.log(options);
   }
