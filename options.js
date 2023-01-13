@@ -88,7 +88,7 @@ let Options = new class
     });
 
     convTitle.addEventListener("click", ()=>{
-      Converter.showHelp("https://github.com/Adrianotiger/binary2array/wiki/Conversion-Settings");
+      Converter.showHelp("https://raw.githubusercontent.com/Adrianotiger/binary2array/main/docs/readme.md");
     });
   }
 
