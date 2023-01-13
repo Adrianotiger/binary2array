@@ -3,7 +3,7 @@ If you import an image, another settings box will appear. So you can do some ima
 
 ### Convert To
 #### none
-Image is converted like any other image
+Image is converted like any other file
 #### jpeg
 Image is converted to a JPEG before converting it
 #### png
