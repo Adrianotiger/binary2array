@@ -4,6 +4,7 @@ let Converter = new class
   {
     this.div = null;
     this.text = null;
+    this.help = null;
     this.array = null;
     this.download = null;
   }
@@ -13,20 +14,32 @@ let Converter = new class
     if(this.div != null) return;
     
     this.text = _CN("textarea");
+    this.help = _CN("div", {class:"help", style:"display:none;"});
     let saveButt = _CN("span", {class:"icon", style:"top:5px;right:25px;position:absolute;", title:"Save C file"}, ["💾"]);
     this.download = _CN("span", {class:"icon", style:"top:5px;right:60px;position:absolute;", title:"Download binary"}, ["⬇"]);
-    this.div = _CN("div", {class:"dialog2"}, [this.text, saveButt, this.download], document.body);
+    this.div = _CN("div", {class:"dialog2"}, [this.text, saveButt, this.download, this.help], document.body);
 
     saveButt.addEventListener("click", ()=>{this.saveFile(false);});
     this.download.addEventListener("click", ()=>{this.saveFile(true);});
+    this.help.addEventListener("click", ()=>{this.help.style.display = "none";});
   }
 
   showHelp(link)
   {
-    fetch(link).then(r=>{
+    fetch("https://raw.githubusercontent.com/Adrianotiger/binary2array/main/docs/" + link).then(r=>{
       return r.text();
     }).then(t=>{
-      this.text.textContent = t;
+      console.log(t);
+      t = t.replace(/#### (.*$)/gm, "<h4>$1</h4>");
+      t = t.replace(/### (.*$)/gm, "<h3>$1</h3>");
+      t = t.replace(/## (.*$)/gm, "<h2>$1</h2>");
+      t = t.replace(/# (.*$)/gm, "<h1>$1</h1>");
+      t = t.replace(/!\[(.*)\]\((.*)\)/gm, "<img src='$2' title='$1' style='max-width:80%;'>");
+      t = t.replace(/[ |^]+(https:\/\/[.]*[^ ]+)/gm, "<a href='$2' target='_blank'>$2</a>");
+      t = t.replace(/^[ ]*-/gm, "<li>");
+      t = t.replace(/\s$/gm, "<br>");
+      this.help.style.display = "block";
+      this.help.innerHTML = t;
     });
   }
 

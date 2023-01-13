@@ -71,7 +71,7 @@ let Options = new class
   fillConversionSettings()
   {
     this.divs['conversion'].innerHTML = "";
-    let convTitle = _CN("h2", null, ["Conversion:"], this.divs['conversion']);
+    let convTitle = _CN("h2", null, ["Conversion:", _CN("span", {class:"icon", style:"border-style:solid;border-width:1px;border-color:#00f;right:0px;"}, [" ❔"])], this.divs['conversion']);
     Object.keys(this.settings).forEach(k=>{
       let span = _CN("span", null, null, this.divs['conversion']);
       _CN("b", null, [k], span);
@@ -88,14 +88,14 @@ let Options = new class
     });
 
     convTitle.addEventListener("click", ()=>{
-      Converter.showHelp("https://raw.githubusercontent.com/Adrianotiger/binary2array/main/docs/readme.md");
+      Converter.showHelp("settings.md");
     });
   }
 
   fillImageConversionSettings()
   {
     this.divs['image'].innerHTML = "";
-    _CN("h2", null, ["Image Settings:"], this.divs['image']);
+    let convTitle = _CN("h2", null, ["Image Settings:", _CN("span", {class:"icon", style:"border-style:solid;border-width:1px;border-color:#00f;right:0px;"}, [" ❔"])], this.divs['image']);
     Object.keys(this.imageSettings).forEach(k=>{
       let span = _CN("span", null, null, this.divs['image']);
       _CN("b", null, [k], span);
@@ -112,6 +112,10 @@ let Options = new class
         .concat(Array.from(inps));
       for(var j=1;j<list.length;j++) list[j].style.visibility = "hidden";
       this.typeSettings[this.inputs["convertto"].value].forEach(k=>{this.inputs[k].style.visibility = "visible";});
+    });
+
+    convTitle.addEventListener("click", ()=>{
+      Converter.showHelp("imagesettings.md");
     });
   }
 
