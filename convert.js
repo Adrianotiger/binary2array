@@ -161,6 +161,10 @@ let Converter = new class
     const pad = options["pad"].checked;
     const prefix = options["prefix"].value.trim();
     const suffix = options["suffix"].value.trim();
+    const writeComment = options["asciicomments"].checked;
+    let comment = "";
+
+    if(filename.length <= 0) filename = "bin_data.bin";
 
     switch(options["datatype"].value)
     {
@@ -202,8 +206,13 @@ let Converter = new class
     this.text.textContent = "static const " + options["datatype"].value + " " + filename.replace(" ", "_").substring(0, filename.indexOf(".")) + "[" + arrLen + "] = {\n";
     this.array.forEach(a=>{
       txt += prefix + this.array[numIndex].toString(radix).padStart(padStart, padChar) + suffix;
+      if(writeComment) comment += this.array[numIndex] < 32 || this.array[numIndex] == 127 ? "." : String.fromCharCode(this.array[numIndex]);
       if(++numIndex < arrLen) txt += ", ";
-      if((numIndex % newLine) == 0) txt += '\n';
+      if((numIndex % newLine) == 0) 
+      {
+        if(writeComment) { txt += " /* " + comment.replace("\n", ".") + " */"; comment = ""; }
+        txt += '\n';
+      }
 
       if((numIndex % 1000) == 0) {this.text.textContent += txt; txt = "";}
     });

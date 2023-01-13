@@ -6,7 +6,7 @@ let Options = new class
     this.div = null;
     this.image = null;
     this.divs = [];
-    this.settings = {format:["hex", "dec", "bin"], prefix:"0x", suffix:"", pad:true, datatype:["uint8_t", "uint16_t", "uint32_t"], columns:16, skipbytes:0};
+    this.settings = {format:["hex", "dec", "bin"], prefix:"0x", suffix:"", pad:true, datatype:["uint8_t", "uint16_t", "uint32_t"], columns:16, skipbytes:0, asciicomments:false};
     this.imageSettings = {convertto:["none", "raw", "raw_compact", "raw_zip", "jpeg", "png"], rgb:["16bit", "8bit"], quality:95, level:2};
     this.typeSettings = {none:[], raw:["rgb"], raw_compact:["rgb"], raw_zip:["rgb", "level"], jpeg:["quality"], png:[]};
     this.inputs = [];
@@ -129,7 +129,8 @@ let Options = new class
     }
     else if(typeof setting == "boolean")
     {
-      inp = _CN("input", {type:"checkbox", checked:setting}, null, parent);
+      inp = _CN("input", {type:"checkbox"}, null, parent);
+      if(setting) inp.setAttribute("checked", true);
     }
     else if(typeof setting == "number")
     {
