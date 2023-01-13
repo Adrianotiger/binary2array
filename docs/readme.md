@@ -7,7 +7,11 @@ https://adrianotiger.github.io/binary2array/
 and press `convert` to have a binary array of your file.  
 
 ## Settings
-Before converting, you can apply some settings to the converter.
+Before converting, you can apply some settings to the converter.  
+Open <a href='settings.md'>Converter Settings</a> to see all converting options.  
+
+If you open an image, you will get some other settings to apply:  
+Open <a href='imagesettings.md'>Image Settings</a> to see all converting options.  
 
 ## Arduino
 This project was made for Arduino and TFT displays. So there is also a section with some info about the conversion.
