@@ -21,6 +21,15 @@ let Converter = new class
     this.download.addEventListener("click", ()=>{this.saveFile(true);});
   }
 
+  showHelp(link)
+  {
+    fetch(link).then(r=>{
+      return r.text();
+    }).then(t=>{
+      this.text.textContent = t;
+    });
+  }
+
   convert(file, options)
   {
     this.text.textContent = "";

@@ -71,7 +71,7 @@ let Options = new class
   fillConversionSettings()
   {
     this.divs['conversion'].innerHTML = "";
-    _CN("h2", null, ["Conversion:"], this.divs['conversion']);
+    let convTitle = _CN("h2", null, ["Conversion:"], this.divs['conversion']);
     Object.keys(this.settings).forEach(k=>{
       let span = _CN("span", null, null, this.divs['conversion']);
       _CN("b", null, [k], span);
@@ -85,6 +85,10 @@ let Options = new class
         case "dec": this.inputs["prefix"].value = ""; break;
         case "bin": this.inputs["prefix"].value = "b"; break;
       }
+    });
+
+    convTitle.addEventListener("click", ()=>{
+      Converter.showHelp("https://github.com/Adrianotiger/binary2array/wiki/Conversion-Settings");
     });
   }
 

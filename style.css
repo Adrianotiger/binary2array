@@ -48,6 +48,8 @@ a {
   background: linear-gradient(to bottom, #abd, #79a);
   margin: 3px 10px;
   border-radius: 4px;
+  width: 100px;
+  max-width: 15vw;
 }
 
 .dialog button:hover, .dialog input:hover, .dialog select:hover

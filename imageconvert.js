@@ -121,7 +121,24 @@ let ImageConverter = new class
         else
         {  
           inc = true;
-          buffer[ret++] = same - 2;
+          same -= 2;
+          if(data.BYTES_PER_ELEMENT == 1)
+          {
+            while (same >= 0xff)
+            {
+              buffer[ret++] = 0xff;
+              same -= 0xff;
+            }
+          }
+          else if(data.BYTES_PER_ELEMENT == 2)
+          {
+            while (same >= 0xffff)
+            {
+              buffer[ret++] = 0xffff;
+              same -= 0xffff;
+            }
+          }
+          buffer[ret++] = same;
           same = 1;
           valo = data[x];
         }
