@@ -9,6 +9,7 @@ Simple and easy to add more features.
 2. Drop a file
 3. Set up the options to convert the file
 4. Press convert
+5. In the textbox, you will get the output. Something like `static const uint8_t imageArray[120] = {0x50, 0x15, 0xa7, 0xdf, ...}`
 
 ![image](https://user-images.githubusercontent.com/7373079/211860291-09249916-506d-432b-aaa2-6ef4a7221a91.png)
 
