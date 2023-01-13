@@ -1,0 +1,15 @@
+# Binary 2 Array
+A simple HTML5 page to convert any binary file to an array.  
+_Personal project made for Arduino (and ESP32) projects._
+
+Just drop or open a file in the page:  
+https://adrianotiger.github.io/binary2array/  
+and press `convert` to have a binary array of your file.  
+
+## Settings
+Before converting, you can apply some settings to the converter.
+
+## Arduino
+This project was made for Arduino and TFT displays. So there is also a section with some info about the conversion.
+
+![preview](https://user-images.githubusercontent.com/7373079/211860291-09249916-506d-432b-aaa2-6ef4a7221a91.png)
