@@ -114,15 +114,17 @@ let ImageConverter = new class
       inc = false;
       if(same >= 2)
       {
-        if(data[x] == valo && x < data.length) 
+        if(data[x] == valo && x < data.length - 1) 
         {
           same++;
-          inc = (x == data.length - 1);
         }
         else
         {  
-          inc = true;
           same -= 2;
+          if (data[x] == valo && x == totalSize - 1)
+            same++;
+          else 
+            inc = true;
           if(data.BYTES_PER_ELEMENT == 1)
           {
             while (same >= 0xff)
