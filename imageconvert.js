@@ -117,6 +117,7 @@ let ImageConverter = new class
         if(data[x] == valo && x < data.length) 
         {
           same++;
+          inc = (x == data.length - 1);
         }
         else
         {  
